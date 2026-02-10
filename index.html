@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Quieres ser mi San Valentín? ❤️</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: #ffebf0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* PANTALLA DE CARGA */
+        #loader {
+            position: fixed;
+            background: #ff4d6d;
+            color: white;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            z-index: 10;
+        }
+
+        .heart {
+            font-size: 50px;
+            animation: latido 1s infinite;
+        }
+
+        @keyframes latido {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        /* CONTENEDORES */
+        .screen {
+            display: none;
+            text-align: center;
+        }
+
+        .screen img {
+            width: 250px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #d6336c;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        #yesBtn {
+            background: #38b000;
+            color: white;
+        }
+
+        #noBtn {
+            background: #adb5bd;
+            color: black;
+            position: absolute;
+        }
+
+        /* PANTALLA FINAL */
+        #final h1 {
+            font-size: 28px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOADER -->
+    <div id="loader">
+        <div class="heart">❤️</div>
+        <p>Cargando sorpresa...</p>
+    </div>
+
+    <!-- PANTALLA PRINCIPAL -->
+    <div id="main" class="screen">
+        <img src="imagenes/1.jpeg" alt="inicio">
+        <h1>¿Quieres ser mi San Valentín? 💘</h1>
+        <br>
+        <button id="yesBtn">Sí 💖</button>
+        <button id="noBtn">No 🙄</button>
+    </div>
+
+    <!-- PANTALLA FINAL -->
+   <div id="final" class="screen">
+        <img src="imagenes/2.jpeg" alt="final">
+        <h1>Sabía que dirías que sí 🥰❤️</h1>
+        <p>Te amo🥰❤️</p>
+                <p>Nos vemos el sabado para el picnic ponte hermosa como siempre mi amor ❤️</p>
+
+    </div>
+
+    <script>
+        const loader = document.getElementById("loader");
+        const main = document.getElementById("main");
+        const finalScreen = document.getElementById("final");
+        const noBtn = document.getElementById("noBtn");
+        const yesBtn = document.getElementById("yesBtn");
+
+        const palabrasNo = [
+            "No 🙅‍♀️",
+            "Segura? 😏",
+            "Piénsalo bien 🤨",
+            "No creo 😌",
+            "Intenta otra vez 😂",
+            "Error ❌",
+            "Imposible 😜",
+            "Por que no? 😑",
+            "Que te pasaaaaaa? 🧐",
+            "No puedes decir que no jajajajaja 😒",
+            "Ya dije que no puedes decir que no 😠",
+            "Dime que siiiiiii  😦"
+        ];
+
+
+        let indexPalabra = 0;
+
+        // Loader
+        setTimeout(() => {
+            loader.style.display = "none";
+            main.style.display = "block";
+            moverNo();
+        }, 2000);
+
+        function moverNo() {
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 50);
+
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
+
+            noBtn.innerText = palabrasNo[indexPalabra];
+            indexPalabra = (indexPalabra + 1) % palabrasNo.length;
+        }
+
+        // Para PC
+        noBtn.addEventListener("mouseover", moverNo);
+
+        // Para celular (iPhone)
+        noBtn.addEventListener("click", moverNo);
+
+        yesBtn.addEventListener("click", () => {
+            main.style.display = "none";
+            finalScreen.style.display = "block";
+        });
+    </script>
+
+</body>
+</html>
