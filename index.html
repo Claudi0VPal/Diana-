@@ -1,237 +1,251 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¿Quieres ser mi San Valentín? ❤️</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Quieres ser mi San Valentín? ❤️</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #ffebf0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #ffebf0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 
-        /* LOADER */
-        #loader {
-            position: fixed;
-            background: #ff4d6d;
-            color: white;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-size: 22px;
-            z-index: 10;
-        }
+/* LOADER */
+#loader {
+    position: fixed;
+    background: #ff4d6d;
+    color: white;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    z-index: 10;
+}
 
-        .heart {
-            font-size: 60px;
-            animation: latido 1s infinite;
-        }
+.heart {
+    font-size: 60px;
+    animation: latido 1s infinite;
+}
 
-        @keyframes latido {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
-        }
+@keyframes latido {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
 
-        /* PANTALLAS */
-        .screen {
-            display: none;
-            text-align: center;
-            z-index: 2;
-        }
+/* PANTALLAS */
+.screen {
+    display: none;
+    text-align: center;
+    z-index: 2;
+    padding: 20px;
+}
 
-        .screen img {
-            width: 260px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-        }
+.screen img {
+    width: 240px;
+    max-width: 90%;
+    border-radius: 20px;
+    margin-bottom: 15px;
+}
 
-        h1 {
-            color: #d6336c;
-        }
+#final img {
+    width: 200px; /* 🔥 IMAGEN FINAL MÁS CHICA */
+}
 
-        p {
-            color: #6c757d;
-            font-size: 18px;
-        }
+h1 {
+    color: #d6336c;
+    margin-bottom: 10px;
+}
 
-        button {
-            padding: 15px 30px;
-            font-size: 18px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-        }
+p {
+    color: #6c757d;
+    font-size: 17px;
+    margin: 6px 0;
+}
 
-        #yesBtn {
-            background: #38b000;
-            color: white;
-            margin-right: 10px;
-        }
+/* BOTONES */
+button {
+    padding: 15px 30px;
+    font-size: 18px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+}
 
-        #noBtn {
-            background: #adb5bd;
-            color: black;
-            position: absolute;
-        }
+#yesBtn {
+    background: #38b000;
+    color: white;
+    margin-right: 10px;
+}
 
-        /* FUEGOS ARTIFICIALES */
-        #fireworks {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-    </style>
+#noBtn {
+    background: #adb5bd;
+    color: black;
+    position: absolute;
+}
+
+/* PANTALLA FINAL CON SCROLL */
+#final {
+    max-height: 100vh;
+    overflow-y: auto; /* 👈 CLAVE */
+}
+
+/* FUEGOS */
+#fireworks {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+</style>
 </head>
 
 <body>
 
-    <!-- LOADER -->
-    <div id="loader">
-        <div class="heart">❤️</div>
-        <p>Cargando sorpresa...</p>
-    </div>
+<!-- AUDIO -->
+<audio id="music" loop>
+    <source src="music/amor.mp3" type="audio/mpeg">
+</audio>
 
-    <!-- PANTALLA PRINCIPAL -->
-    <div id="main" class="screen">
-        <img src="img/iniciocen.jpeg" alt="Inicio">
-        <h1>¿Quieres ser mi San Valentín? 💘</h1>
-        <br>
-        <button id="yesBtn">Sí 💖</button>
-        <button id="noBtn">No 🙄</button>
-    </div>
+<!-- LOADER -->
+<div id="loader">
+    <div class="heart">❤️</div>
+    <p>Cargando sorpresa...</p>
+</div>
 
-    <!-- PANTALLA FINAL -->
-    <div id="final" class="screen">
-        <img src="img/fin.jpeg" alt="Final">
-        <h1>Sabía que dirías que sí 🥰❤️</h1>
-        <p>Te amo bonita ❤️</p>
-        <p>Nos vemos el sábado para el picnic, ponte hermosa como siempre 🌸</p>
-    </div>
+<!-- PANTALLA PRINCIPAL -->
+<div id="main" class="screen">
+    <img src="img/iniciocen.jpeg">
+    <h1>¿Quieres ser mi San Valentín? 💘</h1>
+    <br>
+    <button id="yesBtn">Sí 💖</button>
+    <button id="noBtn">No 🙄</button>
+</div>
 
-    <!-- CANVAS FUEGOS -->
-    <canvas id="fireworks"></canvas>
+<!-- PANTALLA FINAL -->
+<div id="final" class="screen">
+    <img src="img/fin.jpeg">
+    <h1>Sabía que dirías que sí 🥰❤️</h1>
+    <p>Te amo muchísimo ❤️</p>
+    <p>
+        Gracias por hacer mis días más bonitos,  
+        por tu sonrisa, tu cariño y tu forma de querer.
+    </p>
+    <p>
+        Este sábado será nuestro picnic  
+        y muchos momentos más juntos 🌸🧺
+    </p>
+    <p><strong>Feliz San Valentín, mi amor 💕</strong></p>
+</div>
 
-    <script>
-        const loader = document.getElementById("loader");
-        const main = document.getElementById("main");
-        const finalScreen = document.getElementById("final");
-        const noBtn = document.getElementById("noBtn");
-        const yesBtn = document.getElementById("yesBtn");
+<canvas id="fireworks"></canvas>
 
-        const palabrasNo = [
-            "No 🙅‍♀️",
-            "¿Segura? 😏",
-            "Piénsalo bien 🤨",
-            "Intenta otra vez 😂",
-            "Error ❌",
-            "Imposible 😜",
-            "Dime que sí 😦"
-        ];
+<script>
+const loader = document.getElementById("loader");
+const main = document.getElementById("main");
+const finalScreen = document.getElementById("final");
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const music = document.getElementById("music");
 
-        let indexPalabra = 0;
+const palabrasNo = [
+    "No 🙅‍♀️",
+    "¿Segura? 😏",
+    "Piénsalo bien 🤨",
+    "Intenta otra vez 😂",
+    "Error ❌",
+    "Imposible 😜",
+    "Dime que sí 😦"
+];
 
-        // Loader
-        setTimeout(() => {
-            loader.style.display = "none";
-            main.style.display = "block";
-            moverNo();
-        }, 2000);
+let indexPalabra = 0;
 
-        function moverNo() {
-            const x = Math.random() * (window.innerWidth - 120);
-            const y = Math.random() * (window.innerHeight - 60);
+/* LOADER */
+setTimeout(() => {
+    loader.style.display = "none";
+    main.style.display = "block";
+    moverNo();
+}, 2000);
 
-            noBtn.style.left = `${x}px`;
-            noBtn.style.top = `${y}px`;
+function moverNo() {
+    const x = Math.random() * (window.innerWidth - 120);
+    const y = Math.random() * (window.innerHeight - 60);
+    noBtn.style.left = `${x}px`;
+    noBtn.style.top = `${y}px`;
+    noBtn.innerText = palabrasNo[indexPalabra];
+    indexPalabra = (indexPalabra + 1) % palabrasNo.length;
+}
 
-            noBtn.innerText = palabrasNo[indexPalabra];
-            indexPalabra = (indexPalabra + 1) % palabrasNo.length;
-        }
+noBtn.addEventListener("mouseover", moverNo);
+noBtn.addEventListener("click", moverNo);
 
-        noBtn.addEventListener("mouseover", moverNo);
-        noBtn.addEventListener("click", moverNo);
+/* FUEGOS */
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+canvas.width = innerWidth;
+canvas.height = innerHeight;
 
-        /* FUEGOS ARTIFICIALES */
-        const canvas = document.getElementById("fireworks");
-        const ctx = canvas.getContext("2d");
+window.addEventListener("resize", () => {
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+});
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+let fireworks = [];
 
-        window.addEventListener("resize", () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+function Firework(x, y) {
+    this.particles = [];
+    for (let i = 0; i < 50; i++) {
+        this.particles.push({
+            x, y,
+            vx: (Math.random() - 0.5) * 6,
+            vy: (Math.random() - 0.5) * 6,
+            alpha: 1
         });
+    }
+}
 
-        let fireworks = [];
-
-        function Firework(x, y) {
-            this.particles = [];
-            for (let i = 0; i < 40; i++) {
-                this.particles.push({
-                    x,
-                    y,
-                    vx: (Math.random() - 0.5) * 6,
-                    vy: (Math.random() - 0.5) * 6,
-                    alpha: 1
-                });
-            }
-        }
-
-        function animateFireworks() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            fireworks.forEach((fw, i) => {
-                fw.particles.forEach(p => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.alpha -= 0.02;
-
-                    ctx.fillStyle = `rgba(255, 105, 180, ${p.alpha})`;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-
-                fw.particles = fw.particles.filter(p => p.alpha > 0);
-                if (fw.particles.length === 0) fireworks.splice(i, 1);
-            });
-
-            requestAnimationFrame(animateFireworks);
-        }
-
-        animateFireworks();
-
-        function launchFireworks() {
-            fireworks.push(
-                new Firework(
-                    Math.random() * canvas.width,
-                    Math.random() * canvas.height * 0.6
-                )
-            );
-        }
-
-        yesBtn.addEventListener("click", () => {
-            main.style.display = "none";
-            finalScreen.style.display = "block";
-            setInterval(launchFireworks, 600);
+function animateFireworks() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    fireworks.forEach((fw,i)=>{
+        fw.particles.forEach(p=>{
+            p.x += p.vx;
+            p.y += p.vy;
+            p.alpha -= 0.02;
+            ctx.fillStyle = `rgba(255,105,180,${p.alpha})`;
+            ctx.beginPath();
+            ctx.arc(p.x,p.y,3,0,Math.PI*2);
+            ctx.fill();
         });
-    </script>
+        fw.particles = fw.particles.filter(p=>p.alpha>0);
+        if(!fw.particles.length) fireworks.splice(i,1);
+    });
+    requestAnimationFrame(animateFireworks);
+}
+animateFireworks();
+
+function launchFireworks() {
+    fireworks.push(new Firework(
+        Math.random()*canvas.width,
+        Math.random()*canvas.height*0.6
+    ));
+}
+
+yesBtn.addEventListener("click", () => {
+    main.style.display = "none";
+    finalScreen.style.display = "block";
+    music.play();
+    setInterval(launchFireworks, 600);
+});
+</script>
 
 </body>
 </html>
