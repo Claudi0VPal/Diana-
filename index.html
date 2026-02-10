@@ -14,6 +14,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    overflow: hidden;
 }
 
 /* LOADER */
@@ -58,12 +59,11 @@ body {
 }
 
 #final img {
-    width: 200px; /* 🔥 IMAGEN FINAL MÁS CHICA */
+    width: 200px;
 }
 
 h1 {
     color: #d6336c;
-    margin-bottom: 10px;
 }
 
 p {
@@ -93,10 +93,44 @@ button {
     position: absolute;
 }
 
-/* PANTALLA FINAL CON SCROLL */
+/* CUENTA REGRESIVA */
+#countdown {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+.time-box {
+    background: white;
+    padding: 10px 14px;
+    border-radius: 12px;
+    min-width: 70px;
+}
+
+.time-box span {
+    display: block;
+    font-size: 22px;
+    color: #ff4d6d;
+    font-weight: bold;
+}
+
+.time-box small {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+/* PANTALLA FINAL */
 #final {
     max-height: 100vh;
-    overflow-y: auto; /* 👈 CLAVE */
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+#final::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
 }
 
 /* FUEGOS */
@@ -134,7 +168,9 @@ button {
 <!-- PANTALLA FINAL -->
 <div id="final" class="screen">
     <img src="img/fin.jpeg">
+
     <h1>Sabía que dirías que sí 🥰❤️</h1>
+
     <p>Te amo muchísimo ❤️</p>
     <p>
         Gracias por hacer mis días más bonitos,  
@@ -145,6 +181,27 @@ button {
         y muchos momentos más juntos 🌸🧺
     </p>
     <p><strong>Feliz San Valentín, mi amor 💕</strong></p>
+    <p><strong>Faltan exactamente:</strong></p>
+
+    <div id="countdown">
+        <div class="time-box">
+            <span id="days">0</span>
+            <small>Días</small>
+        </div>
+        <div class="time-box">
+            <span id="hours">0</span>
+            <small>Horas</small>
+        </div>
+        <div class="time-box">
+            <span id="minutes">0</span>
+            <small>Minutos</small>
+        </div>
+        <div class="time-box">
+            <span id="seconds">0</span>
+            <small>Segundos</small>
+        </div>
+    </div>
+
 </div>
 
 <canvas id="fireworks"></canvas>
@@ -157,19 +214,13 @@ const noBtn = document.getElementById("noBtn");
 const yesBtn = document.getElementById("yesBtn");
 const music = document.getElementById("music");
 
+/* BOTÓN NO */
 const palabrasNo = [
-    "No 🙅‍♀️",
-    "¿Segura? 😏",
-    "Piénsalo bien 🤨",
-    "Intenta otra vez 😂",
-    "Error ❌",
-    "Imposible 😜",
-    "Dime que sí 😦"
+    "No 🙅‍♀️","¿Segura? 😏","Piénsalo bien 🤨",
+    "Intenta otra vez 😂","Error ❌","Imposible 😜","Dime que sí 😦"
 ];
-
 let indexPalabra = 0;
 
-/* LOADER */
 setTimeout(() => {
     loader.style.display = "none";
     main.style.display = "block";
@@ -177,10 +228,8 @@ setTimeout(() => {
 }, 2000);
 
 function moverNo() {
-    const x = Math.random() * (window.innerWidth - 120);
-    const y = Math.random() * (window.innerHeight - 60);
-    noBtn.style.left = `${x}px`;
-    noBtn.style.top = `${y}px`;
+    noBtn.style.left = Math.random() * (innerWidth - 120) + "px";
+    noBtn.style.top = Math.random() * (innerHeight - 60) + "px";
     noBtn.innerText = palabrasNo[indexPalabra];
     indexPalabra = (indexPalabra + 1) % palabrasNo.length;
 }
@@ -188,62 +237,79 @@ function moverNo() {
 noBtn.addEventListener("mouseover", moverNo);
 noBtn.addEventListener("click", moverNo);
 
+/* CUENTA REGRESIVA */
+function updateCountdown() {
+    const target = new Date(new Date().getFullYear(), 1, 14, 0, 0, 0);
+    const now = new Date();
+    let diff = target - now;
+
+    if (diff <= 0) {
+        document.getElementById("countdown").innerHTML =
+            "<p><strong>Hoy es nuestro día ❤️</strong></p>";
+        return;
+    }
+
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+
+    days.innerText = d;
+    hours.innerText = h;
+    minutes.innerText = m;
+    seconds.innerText = s;
+}
+setInterval(updateCountdown, 1000);
+
 /* FUEGOS */
 const canvas = document.getElementById("fireworks");
 const ctx = canvas.getContext("2d");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
-window.addEventListener("resize", () => {
-    canvas.width = innerWidth;
-    canvas.height = innerHeight;
-});
-
 let fireworks = [];
-
-function Firework(x, y) {
-    this.particles = [];
-    for (let i = 0; i < 50; i++) {
+function Firework(x,y){
+    this.particles=[];
+    for(let i=0;i<50;i++){
         this.particles.push({
-            x, y,
-            vx: (Math.random() - 0.5) * 6,
-            vy: (Math.random() - 0.5) * 6,
-            alpha: 1
+            x,y,
+            vx:(Math.random()-0.5)*6,
+            vy:(Math.random()-0.5)*6,
+            a:1
         });
     }
 }
 
-function animateFireworks() {
+function animate(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    fireworks.forEach((fw,i)=>{
-        fw.particles.forEach(p=>{
-            p.x += p.vx;
-            p.y += p.vy;
-            p.alpha -= 0.02;
-            ctx.fillStyle = `rgba(255,105,180,${p.alpha})`;
-            ctx.beginPath();
-            ctx.arc(p.x,p.y,3,0,Math.PI*2);
-            ctx.fill();
+    fireworks.forEach((f,i)=>{
+        f.particles.forEach(p=>{
+            p.x+=p.vx; p.y+=p.vy; p.a-=0.02;
+            ctx.fillStyle=`rgba(255,105,180,${p.a})`;
+            ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2); ctx.fill();
         });
-        fw.particles = fw.particles.filter(p=>p.alpha>0);
-        if(!fw.particles.length) fireworks.splice(i,1);
+        f.particles=f.particles.filter(p=>p.a>0);
+        if(!f.particles.length) fireworks.splice(i,1);
     });
-    requestAnimationFrame(animateFireworks);
+    requestAnimationFrame(animate);
 }
-animateFireworks();
+animate();
 
-function launchFireworks() {
-    fireworks.push(new Firework(
-        Math.random()*canvas.width,
-        Math.random()*canvas.height*0.6
-    ));
+function launchFireworks(){
+    fireworks.push(
+        new Firework(
+            Math.random()*canvas.width,
+            Math.random()*canvas.height*0.6
+        )
+    );
 }
 
-yesBtn.addEventListener("click", () => {
-    main.style.display = "none";
-    finalScreen.style.display = "block";
+yesBtn.addEventListener("click",()=>{
+    main.style.display="none";
+    finalScreen.style.display="block";
     music.play();
-    setInterval(launchFireworks, 600);
+    updateCountdown();
+    setInterval(launchFireworks,600);
 });
 </script>
 
