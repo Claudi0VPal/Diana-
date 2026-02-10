@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -8,7 +8,7 @@
     <style>
         body {
             margin: 0;
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             background: #ffebf0;
             display: flex;
             justify-content: center;
@@ -17,7 +17,7 @@
             overflow: hidden;
         }
 
-        /* PANTALLA DE CARGA */
+        /* LOADER */
         #loader {
             position: fixed;
             background: #ff4d6d;
@@ -33,7 +33,7 @@
         }
 
         .heart {
-            font-size: 50px;
+            font-size: 60px;
             animation: latido 1s infinite;
         }
 
@@ -43,20 +43,26 @@
             100% { transform: scale(1); }
         }
 
-        /* CONTENEDORES */
+        /* PANTALLAS */
         .screen {
             display: none;
             text-align: center;
+            z-index: 2;
         }
 
         .screen img {
-            width: 250px;
+            width: 260px;
             border-radius: 20px;
             margin-bottom: 20px;
         }
 
         h1 {
             color: #d6336c;
+        }
+
+        p {
+            color: #6c757d;
+            font-size: 18px;
         }
 
         button {
@@ -70,6 +76,7 @@
         #yesBtn {
             background: #38b000;
             color: white;
+            margin-right: 10px;
         }
 
         #noBtn {
@@ -78,9 +85,15 @@
             position: absolute;
         }
 
-        /* PANTALLA FINAL */
-        #final h1 {
-            font-size: 28px;
+        /* FUEGOS ARTIFICIALES */
+        #fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
         }
     </style>
 </head>
@@ -95,7 +108,7 @@
 
     <!-- PANTALLA PRINCIPAL -->
     <div id="main" class="screen">
-        <img src="Img/iniciocen.jpeg">
+        <img src="img/iniciocen.jpeg" alt="Inicio">
         <h1>¿Quieres ser mi San Valentín? 💘</h1>
         <br>
         <button id="yesBtn">Sí 💖</button>
@@ -103,13 +116,15 @@
     </div>
 
     <!-- PANTALLA FINAL -->
-   <div id="final" class="screen">
-        <img src="Img/fin.jpeg">
+    <div id="final" class="screen">
+        <img src="img/fin.jpeg" alt="Final">
         <h1>Sabía que dirías que sí 🥰❤️</h1>
-        <p>Te amo bonita🥰❤️</p>
-        <p>Nos vemos el sabado para el picnic, ponte hermosa como siempre mi amor ❤️</p>
-
+        <p>Te amo bonita ❤️</p>
+        <p>Nos vemos el sábado para el picnic, ponte hermosa como siempre 🌸</p>
     </div>
+
+    <!-- CANVAS FUEGOS -->
+    <canvas id="fireworks"></canvas>
 
     <script>
         const loader = document.getElementById("loader");
@@ -120,19 +135,13 @@
 
         const palabrasNo = [
             "No 🙅‍♀️",
-            "Segura? 😏",
+            "¿Segura? 😏",
             "Piénsalo bien 🤨",
-            "No creo 😌",
             "Intenta otra vez 😂",
             "Error ❌",
             "Imposible 😜",
-            "Por que no? 😑",
-            "Que te pasaaaaaa? 🧐",
-            "No puedes decir que no jajajajaja 😒",
-            "Ya dije que no puedes decir que no 😠",
-            "Dime que siiiiiii  😦"
+            "Dime que sí 😦"
         ];
-
 
         let indexPalabra = 0;
 
@@ -144,8 +153,8 @@
         }, 2000);
 
         function moverNo() {
-            const x = Math.random() * (window.innerWidth - 100);
-            const y = Math.random() * (window.innerHeight - 50);
+            const x = Math.random() * (window.innerWidth - 120);
+            const y = Math.random() * (window.innerHeight - 60);
 
             noBtn.style.left = `${x}px`;
             noBtn.style.top = `${y}px`;
@@ -154,22 +163,75 @@
             indexPalabra = (indexPalabra + 1) % palabrasNo.length;
         }
 
-        // Para PC
         noBtn.addEventListener("mouseover", moverNo);
-
-        // Para celular (iPhone)
         noBtn.addEventListener("click", moverNo);
+
+        /* FUEGOS ARTIFICIALES */
+        const canvas = document.getElementById("fireworks");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        window.addEventListener("resize", () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        let fireworks = [];
+
+        function Firework(x, y) {
+            this.particles = [];
+            for (let i = 0; i < 40; i++) {
+                this.particles.push({
+                    x,
+                    y,
+                    vx: (Math.random() - 0.5) * 6,
+                    vy: (Math.random() - 0.5) * 6,
+                    alpha: 1
+                });
+            }
+        }
+
+        function animateFireworks() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            fireworks.forEach((fw, i) => {
+                fw.particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.alpha -= 0.02;
+
+                    ctx.fillStyle = `rgba(255, 105, 180, ${p.alpha})`;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                fw.particles = fw.particles.filter(p => p.alpha > 0);
+                if (fw.particles.length === 0) fireworks.splice(i, 1);
+            });
+
+            requestAnimationFrame(animateFireworks);
+        }
+
+        animateFireworks();
+
+        function launchFireworks() {
+            fireworks.push(
+                new Firework(
+                    Math.random() * canvas.width,
+                    Math.random() * canvas.height * 0.6
+                )
+            );
+        }
 
         yesBtn.addEventListener("click", () => {
             main.style.display = "none";
             finalScreen.style.display = "block";
+            setInterval(launchFireworks, 600);
         });
     </script>
 
 </body>
 </html>
-
-
-
-
-
